@@ -77,7 +77,6 @@ end
 for i, def in ipairs(more_boats.boats) do
 	local desc = def[1]
 	local name = def[2]
-	local lname = def[2].."_locked"
 	local texture_inv = def[3]
 	local texture_wield = def[4]
 	local texture_boat = def[5]
@@ -101,7 +100,7 @@ for i, def in ipairs(more_boats.boats) do
 
 	boat_def.on_rightclick = more_boat.on_rightclick
 	boat_def.on_detach_child = more_boat.on_detach_child
-	boat_def.on_activate = more_boat.on_activate
+	boat_def.on_activate = more_boat.on_step
 	boat_def.get_staticdata = more_boat.get_staticdata
 	boat_def.on_punch = more_boat.on_punch
 	if not isnt_lava then
@@ -110,74 +109,64 @@ for i, def in ipairs(more_boats.boats) do
 		boat_def.on_step = more_boat.LAVA.on_step
 	end
 
-	for _, boll in ipairs({false, true}) do
-		desc = S(desc)
-		if boll == true then
-			name = lname
-			desc = S("Locked").." "..desc
-		end
-		minetest.register_entity(name, boat_def)
-		minetest.register_craftitem(name, {
-			description = desc,
-			inventory_image = texture_inv,
-			wield_image = texture_wield,
-			wield_scale = {x = 2, y = 2, z = 1},
-			liquids_pointable = true,
-			groups = {flammable = 2},
-			on_place = function(itemstack, placer, pointed_thing)
-				local under = pointed_thing.under
-				local node = minetest.get_node(under)
-				local udef = minetest.registered_nodes[node.name]
-				if udef and udef.on_rightclick and
-						not (placer and placer:is_player() and
-						placer:get_player_control().sneak) then
-					return udef.on_rightclick(under, node, placer, itemstack,
-						pointed_thing) or itemstack
-				end
+	minetest.register_entity(name, boat_def)
+	minetest.register_craftitem(name, {
+		description = S(desc),
+		inventory_image = texture_inv,
+		wield_image = texture_wield,
+		wield_scale = {x = 2, y = 2, z = 1},
+		liquids_pointable = true,
+		groups = {flammable = 2},
+		on_place = function(itemstack, placer, pointed_thing)
+			local under = pointed_thing.under
+			local node = minetest.get_node(under)
+			local udef = minetest.registered_nodes[node.name]
+			if udef and udef.on_rightclick and
+					not (placer and placer:is_player() and
+					placer:get_player_control().sneak) then
+				return udef.on_rightclick(under, node, placer, itemstack,
+					pointed_thing) or itemstack
+			end
 
-				if pointed_thing.type ~= "node" then
+			if pointed_thing.type ~= "node" then
+				return itemstack
+			end
+			if not isnt_lava then
+				if not is_water(pointed_thing.under) then
 					return itemstack
 				end
-				if not isnt_lava then
-					if not is_water(pointed_thing.under) then
-						return itemstack
-					end
-				else
-					if not is_lava(pointed_thing.under) then
-						return itemstack
-					end
+			else
+				if not is_lava(pointed_thing.under) then
+					return itemstack
 				end
-				pointed_thing.under.y = pointed_thing.under.y + 0.5
-				boat = minetest.add_entity(pointed_thing.under, name)
-				if boat then
-					if placer then
-						boat:set_yaw(placer:get_look_horizontal())
-					end
-					local player_name = placer and placer:get_player_name() or ""
-					if not minetest.is_creative_enabled(player_name) then
-						itemstack:take_item()
-					end
-					boat:set_properties({
-						protected = boll,
-					})
+			end
+			pointed_thing.under.y = pointed_thing.under.y + 0.5
+			boat = minetest.add_entity(pointed_thing.under, name)
+			if boat then
+				if placer then
+					boat:set_yaw(placer:get_look_horizontal())
 				end
-				return itemstack
-			end,
-		})
+				local player_name = placer and placer:get_player_name() or ""
+				if not minetest.is_creative_enabled(player_name) then
+					itemstack:take_item()
+				end
+			end
+			return itemstack
+		end,
+	})
+	minetest.register_craft({
+		output = name,
+		recipe = {
+			{"", "", ""},
+			{material, "", material},
+			{material, material, material},
+		}
+	})
+	if not is_lava then
 		minetest.register_craft({
-			output = name,
-			recipe = {
-				{"", "", ""},
-				{material, "", material},
-				{material, material, material},
-			}
+			type = "fuel",
+			recipe = name,
+			burntime = 20,
 		})
-		if not is_lava then
-			minetest.register_craft({
-				type = "fuel",
-				recipe = name,
-				burntime = 20,
-			})
-		end
 	end
 end

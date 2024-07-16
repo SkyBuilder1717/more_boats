@@ -26,24 +26,6 @@ function more_boat.on_rightclick(self, clicker)
 		return
 	end
 	local name = clicker:get_player_name()
-	local obj = self.object
-	local prop = obj:get_properties()
-	local bname = minetest.registered_craftitems[obj:get_luaentity().name].description
-	obj:set_properties({
-		infotext = bname,
-	})
-	if (prop.infotext == "" and prop.protected == true) then
-		obj:set_properties({
-			infotext = prop.infotext.."\nOwner: "..name,
-			owner = name,
-		})
-	end
-	if prop.protected == true then
-		local owner = prop.owner
-		if not owner == name then
-			return
-		end
-	end
 	if self.driver and name == self.driver then
 		clicker:set_detach()
 
@@ -97,13 +79,6 @@ function more_boat.on_punch(self, puncher)
 	end
 
 	local name = puncher:get_player_name()
-	local obj = self.object
-	local prop = obj:get_properties()
-	if (prop.protected == true and not (prop.owner == "")) then
-		if not (prop.owner == name) then
-			return
-		end
-	end
 	if self.driver and name == self.driver then
 		self.driver = nil
 		puncher:set_detach()
