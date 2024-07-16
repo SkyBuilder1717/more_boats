@@ -1,0 +1,2 @@
+# Adds an additional protected boats for the game
+more_boats_protected (Protected Boats) bool false
