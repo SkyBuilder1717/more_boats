@@ -1,3 +1,4 @@
+
 more_boats = {}
 more_boats.boats = {
 	{
@@ -44,9 +45,7 @@ more_boats.boats = {
 }
 local S = minetest.get_translator("more_boats")
 local modpath = minetest.get_modpath("more_boats")
-
 dofile(modpath .."/api.lua")
-
 minetest.clear_craft({
 	output = "boats:boat",
 	recipe = {
@@ -63,17 +62,14 @@ minetest.register_craft({
 		{"default:wood", "default:wood", "default:wood"},
 	},
 })
-
 local function is_water(pos)
 	local nn = minetest.get_node(pos).name
 	return minetest.get_item_group(nn, "water") ~= 0
 end
-
 local function is_lava(pos)
 	local nn = minetest.get_node(pos).name
 	return minetest.get_item_group(nn, "lava") ~= 0
 end
-
 for i, def in ipairs(more_boats.boats) do
 	local desc = def[1]
 	local name = def[2]
@@ -82,7 +78,6 @@ for i, def in ipairs(more_boats.boats) do
 	local texture_boat = def[5]
 	local material = def[6]
 	local isnt_lava = def[7]
-
 	local boat_def = {
 		initial_properties = {
 			physical = true,
@@ -97,7 +92,6 @@ for i, def in ipairs(more_boats.boats) do
 		removed = false,
 		auto = false
 	}
-
 	boat_def.on_rightclick = more_boat.on_rightclick
 	boat_def.on_detach_child = more_boat.on_detach_child
 	boat_def.on_activate = more_boat.on_step
@@ -108,7 +102,6 @@ for i, def in ipairs(more_boats.boats) do
 	else
 		boat_def.on_step = more_boat.LAVA.on_step
 	end
-
 	minetest.register_entity(name, boat_def)
 	minetest.register_craftitem(name, {
 		description = S(desc),
@@ -127,7 +120,6 @@ for i, def in ipairs(more_boats.boats) do
 				return udef.on_rightclick(under, node, placer, itemstack,
 					pointed_thing) or itemstack
 			end
-
 			if pointed_thing.type ~= "node" then
 				return itemstack
 			end
