@@ -1,9 +1,7 @@
 more_boat = {
 	LAVA = {}
 }
-
 local S = minetest.get_translator("boats")
-
 local function is_lava(pos)
 	local nn = minetest.get_node(pos).name
 	return minetest.get_item_group(nn, "lava") ~= 0
@@ -20,7 +18,6 @@ end
 local function get_v(v)
 	return math.sqrt(v.x ^ 2 + v.z ^ 2)
 end
-
 function more_boat.on_rightclick(self, clicker)
 	if not clicker or not clicker:is_player() then
 		return
@@ -48,7 +45,6 @@ function more_boat.on_rightclick(self, clicker)
 		clicker:set_look_horizontal(self.object:get_yaw())
 	end
 end
-
 function more_boat.on_detach_child(self, child)
 	if child and child:get_player_name() == self.driver then
 		player_api.player_attached[child:get_player_name()] = false
@@ -57,8 +53,6 @@ function more_boat.on_detach_child(self, child)
 		self.auto = false
 	end
 end
-
-
 function more_boat.on_activate(self, staticdata, dtime_s)
 	self.object:set_armor_groups({immortal = 1})
 	if staticdata then
@@ -66,18 +60,13 @@ function more_boat.on_activate(self, staticdata, dtime_s)
 	end
 	self.last_v = self.v
 end
-
-
 function more_boat.get_staticdata(self)
 	return tostring(self.v)
 end
-
-
 function more_boat.on_punch(self, puncher)
 	if not puncher or not puncher:is_player() or self.removed then
 		return
 	end
-
 	local name = puncher:get_player_name()
 	if self.driver and name == self.driver then
 		self.driver = nil
@@ -96,14 +85,11 @@ function more_boat.on_punch(self, puncher)
 			end
 		end
 		local name = puncher:get_player_name()
-		--minetest.chat_send_player(name, dump())
 		minetest.after(0.1, function()
 			self.object:remove()
 		end)
 	end
 end
-
-
 function more_boat.on_step(self, dtime)
 	self.v = get_v(self.object:get_velocity()) * math.sign(self.v)
 	if self.driver then
@@ -151,7 +137,6 @@ function more_boat.on_step(self, dtime)
 	else
 		self.v = self.v - drag
 	end
-
 	local p = self.object:get_pos()
 	p.y = p.y - 0.5
 	local new_velo
@@ -197,7 +182,6 @@ function more_boat.on_step(self, dtime)
 	self.object:set_velocity(new_velo)
 	self.object:set_acceleration(new_acce)
 end
-
 function more_boat.LAVA.on_step(self, dtime)
 	self.v = get_v(self.object:get_velocity()) * math.sign(self.v)
 	if self.driver then
@@ -245,7 +229,6 @@ function more_boat.LAVA.on_step(self, dtime)
 	else
 		self.v = self.v - drag
 	end
-
 	local p = self.object:get_pos()
 	p.y = p.y - 0.5
 	local new_velo
