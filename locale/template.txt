@@ -1,6 +1,0 @@
-# textdomain: more_boats
-Aspen Boat=
-Acacia Boat=
-Jungle Wood Boat=
-Pine Boat=
-Obsidian Boat=
