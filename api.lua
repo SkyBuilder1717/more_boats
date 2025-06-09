@@ -275,19 +275,19 @@ function more_boats.register_boat(name, def)
 		}
 	})
 
-	if not def.no_fuel then
+	if def.fuel then
+		core.register_craft({
+			type = "fuel",
+			recipe = name,
+			burntime = 20,
+		})
+	else
 		if def.cooking then
 			core.register_craft({
 				type = "cooking",
 				output = def.cooking,
 				recipe = name,
 				cooktime = 15,
-			})
-		else
-			core.register_craft({
-				type = "fuel",
-				recipe = name,
-				burntime = 20,
 			})
 		end
 	end

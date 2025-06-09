@@ -7,29 +7,32 @@ more_boats = {
 		["more_boats:aspen_boat"] = {
 			description = S("Aspen Boat"),
 			texture = "default_aspen_wood.png",
-			material = "default:aspen_wood"
+			material = "default:aspen_wood",
+			fuel = true
 		},
 		["more_boats:acacia_boat"] = {
 			description = S("Acacia Boat"),
 			texture = "default_acacia_wood.png",
-			material = "default:acacia_wood"
+			material = "default:acacia_wood",
+			fuel = true
 		},
 		["more_boats:pine_boat"] = {
 			description = S("Pine Boat"),
 			texture = "default_pine_wood.png",
-			material = "default:pine_wood"
+			material = "default:pine_wood",
+			fuel = true
 		},
 		["more_boats:jungle_boat"] = {
 			description = S("Jungle Wood Boat"),
 			texture = "default_junglewood.png",
-			material = "default:junglewood"
+			material = "default:junglewood",
+			fuel = true
 		},
 		["more_boats:obsidian_boat"] = {
 			description = S("Obsidian Boat"),
 			texture = "default_obsidian.png",
 			material = "default:obsidian",
-			group = {"lava"},
-			no_fuel = true
+			group = {"lava"}
 		}
 	}
 }
