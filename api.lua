@@ -234,7 +234,7 @@ function more_boat.LAVA.on_step(self, dtime)
 	local new_velo
 	local new_acce = {x = 0, y = 0, z = 0}
 	if not is_lava(p) then
-		local nodedef = core.registered_nodes[minetest.get_node(p).name]
+		local nodedef = core.registered_nodes[core.get_node(p).name]
 		if (not nodedef) or nodedef.walkable then
 			self.v = 0
 			new_acce = {x = 0, y = 1, z = 0}
