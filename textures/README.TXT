@@ -7,4 +7,4 @@ modified by PavelS(SokolovPavel) (CC BY-SA 3.0)
 modified by sofar (CC BY-SA 3.0)
 --
 
-Changed textures: SkyBuilder1717 (MIT)
+Made in masks by SkyBuilder1717 (MIT)

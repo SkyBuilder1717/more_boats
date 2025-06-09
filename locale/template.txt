@@ -6,7 +6,3 @@ Acacia Boat=
 Jungle Wood Boat=
 Pine Boat=
 Obsidian Boat=
-
-# Messages
-Boat cruise mode off=
-Boat cruise mode on=
