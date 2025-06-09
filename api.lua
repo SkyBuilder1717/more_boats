@@ -1,14 +1,14 @@
 more_boat = {
 	LAVA = {}
 }
-local S = minetest.get_translator("boats")
+local S = core.get_translator("boats")
 local function is_lava(pos)
-	local nn = minetest.get_node(pos).name
-	return minetest.get_item_group(nn, "lava") ~= 0
+	local nn = core.get_node(pos).name
+	return core.get_item_group(nn, "lava") ~= 0
 end
 local function is_water(pos)
-	local nn = minetest.get_node(pos).name
-	return minetest.get_item_group(nn, "water") ~= 0
+	local nn = core.get_node(pos).name
+	return core.get_item_group(nn, "water") ~= 0
 end
 local function get_velocity(v, yaw, y)
 	local x = -math.sin(yaw) * v
@@ -29,7 +29,7 @@ function more_boat.on_rightclick(self, clicker)
 		player_api.set_animation(clicker, "stand", 30)
 		local pos = clicker:get_pos()
 		pos = {x = pos.x, y = pos.y + 0.2, z = pos.z}
-		minetest.after(0.1, function()
+		core.after(0.1, function()
 			clicker:set_pos(pos)
 		end)
 	elseif not self.driver then
@@ -39,7 +39,7 @@ function more_boat.on_rightclick(self, clicker)
 		self.driver = name
 		player_api.player_attached[name] = true
 
-		minetest.after(0.2, function()
+		core.after(0.2, function()
 			player_api.set_animation(clicker, "sit", 30)
 		end)
 		clicker:set_look_horizontal(self.object:get_yaw())
@@ -77,15 +77,15 @@ function more_boat.on_punch(self, puncher)
 		self.removed = true
 		local inv = puncher:get_inventory()
 		local luamob = self.object:get_luaentity().name
-		if not minetest.is_creative_enabled(name) --then
+		if not core.is_creative_enabled(name)
 				or not inv:contains_item("main", luamob) then
 			local leftover = inv:add_item("main", luamob)
 			if not leftover:is_empty() then
-				minetest.add_item(self.object:get_pos(), leftover)
+				core.add_item(self.object:get_pos(), leftover)
 			end
 		end
 		local name = puncher:get_player_name()
-		minetest.after(0.1, function()
+		core.after(0.1, function()
 			self.object:remove()
 		end)
 	end
@@ -93,19 +93,19 @@ end
 function more_boat.on_step(self, dtime)
 	self.v = get_v(self.object:get_velocity()) * math.sign(self.v)
 	if self.driver then
-		local driver_objref = minetest.get_player_by_name(self.driver)
+		local driver_objref = core.get_player_by_name(self.driver)
 		if driver_objref then
 			local ctrl = driver_objref:get_player_control()
 			if ctrl.up and ctrl.down then
 				if not self.auto then
 					self.auto = true
-					minetest.chat_send_player(self.driver, S("Boat cruise mode on"))
+					core.chat_send_player(self.driver, S("Boat cruise mode on"))
 				end
 			elseif ctrl.down then
 				self.v = self.v - dtime * 2.0
 				if self.auto then
 					self.auto = false
-					minetest.chat_send_player(self.driver, S("Boat cruise mode off"))
+					core.chat_send_player(self.driver, S("Boat cruise mode off"))
 				end
 			elseif ctrl.up or self.auto then
 				self.v = self.v + dtime * 2.0
@@ -142,7 +142,7 @@ function more_boat.on_step(self, dtime)
 	local new_velo
 	local new_acce = {x = 0, y = 0, z = 0}
 	if not is_water(p) then
-		local nodedef = minetest.registered_nodes[minetest.get_node(p).name]
+		local nodedef = core.registered_nodes[core.get_node(p).name]
 		if (not nodedef) or nodedef.walkable then
 			self.v = 0
 			new_acce = {x = 0, y = 1, z = 0}
@@ -185,19 +185,19 @@ end
 function more_boat.LAVA.on_step(self, dtime)
 	self.v = get_v(self.object:get_velocity()) * math.sign(self.v)
 	if self.driver then
-		local driver_objref = minetest.get_player_by_name(self.driver)
+		local driver_objref = core.get_player_by_name(self.driver)
 		if driver_objref then
 			local ctrl = driver_objref:get_player_control()
 			if ctrl.up and ctrl.down then
 				if not self.auto then
 					self.auto = true
-					minetest.chat_send_player(self.driver, S("Boat cruise mode on"))
+					core.chat_send_player(self.driver, S("Boat cruise mode on"))
 				end
 			elseif ctrl.down then
 				self.v = self.v - dtime * 2.0
 				if self.auto then
 					self.auto = false
-					minetest.chat_send_player(self.driver, S("Boat cruise mode off"))
+					core.chat_send_player(self.driver, S("Boat cruise mode off"))
 				end
 			elseif ctrl.up or self.auto then
 				self.v = self.v + dtime * 2.0
@@ -234,7 +234,7 @@ function more_boat.LAVA.on_step(self, dtime)
 	local new_velo
 	local new_acce = {x = 0, y = 0, z = 0}
 	if not is_lava(p) then
-		local nodedef = minetest.registered_nodes[minetest.get_node(p).name]
+		local nodedef = core.registered_nodes[minetest.get_node(p).name]
 		if (not nodedef) or nodedef.walkable then
 			self.v = 0
 			new_acce = {x = 0, y = 1, z = 0}
