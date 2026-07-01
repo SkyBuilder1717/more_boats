@@ -209,7 +209,7 @@ function more_boats.register_boat(name, def)
 			physical = true,
 			collisionbox = {-0.5, -0.35, -0.5, 0.5, 0.3, 0.5},
 			visual = "mesh",
-			mesh = "boats_boat.obj",
+			mesh = def.mesh or "boats_boat.obj",
 			textures = {def.texture},
 		},
 		driver = nil,
